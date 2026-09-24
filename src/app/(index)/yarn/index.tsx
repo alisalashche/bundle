@@ -27,7 +27,7 @@ export default function YarnScreen() {
                     <Text>Keep track of all yarns in your yarn stach.</Text>
                 </View>
 
-                <Text>+ Add new yarn</Text>
+                <Link href='/yarn/new'>+ Add new yarn</Link>
 
                 <View>
                     <Text>Available yarn</Text>

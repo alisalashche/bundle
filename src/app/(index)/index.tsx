@@ -33,13 +33,14 @@ export default function HomeScreen() {
 
         <View>
           <Text>Get inspired</Text>
-          <Text>All you saved inspo pictures, tutorials, and patters will be here</Text>
+          <Text>All you saved inspo pictures, tutorials, and patters will be here.</Text>
         </View>
 
         <View>
           <Text>Admire your works</Text>
           <Text>Comlete your first work.</Text>
         </View>
+        
       </ScrollView>
     </SafeAreaView>
   );

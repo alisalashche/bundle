@@ -32,6 +32,13 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Bundle uses your photos to add pictures of your projects and yarn",
+          "cameraPermission": "Bundle uses the camera to photograph yarn labels and finished works"
+        }
       ]
     ],
     "experiments": {

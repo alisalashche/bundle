@@ -8,6 +8,7 @@ export type Yarn = {
     weightG: number;
     hookSize?: string;
     needleSize?: string;
+    shop?: string;
     type: YarnType;
     quantity: number;
     notes?: string;

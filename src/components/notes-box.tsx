@@ -6,23 +6,23 @@ const Card = styled.View`
   padding: 10px 15px;
   gap: 12px;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radius.lg}px;
-  background-color: ${({ theme }) => theme.colors.surface};
+  border-color: ${({ theme }) => theme.colors.placeholder};
+  border-radius: ${({ theme }) => theme.radius.md}px;
+  background-color: ${({ theme }) => theme.colors.surfaceAlt};
 `;
 
 
 const NotesText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.semiBold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
-  color: ${({ theme }) => theme.colors.black};
+  color: ${({ theme }) => theme.colors.dark};
 `;
 
 const NotesInput = styled.TextInput`
   min-height: 60px;
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.semiBold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.dark};
 `;
 
 const EditLink = styled.Text`

@@ -8,15 +8,20 @@ const Box = styled.Pressable<{ $height: number }>`
   justify-content: center;
   gap: 12px;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radius.lg}px;
-  background-color: ${({ theme }) => theme.colors.surface};
+  border-color: ${({ theme }) => theme.colors.placeholder};
+  border-radius: ${({ theme }) => theme.radius.md}px;
+  background-color: ${({ theme }) => theme.colors.surfaceAlt};
+
+  shadow-color: #000000;
+  shadow-offset: 0px 6px;
+  shadow-opacity: 0.06;
+  shadow-radius: 9px;
 `;
 
 const OptionText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.semiBold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.dark};
 `;
 
 type PhotoOptionProps = {
@@ -30,7 +35,7 @@ export function PhotoOption({ icon, label, height, onPress }: PhotoOptionProps) 
     const theme = useTheme();
     return (
         <Box accessibilityRole="button" onPress={onPress} $height={height}>
-            <SymbolView name={icon} size={30} tintColor={theme.colors.text} />
+            <SymbolView name={icon} size={30} tintColor={theme.colors.dark} />
             <OptionText>{label}</OptionText>
         </Box>
     );

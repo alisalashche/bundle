@@ -1,47 +1,40 @@
-import { Link } from "expo-router";
-import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { AddCard } from '@/components/add-card';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { EmptyState } from '@/components/empty-state';
+import { Grid } from '@/components/layout';
+import { LinkRow } from '@/components/link-row';
+import { PageHeader } from '@/components/page-header';
+import { Screen } from '@/components/screen';
+import { Heading } from '@/components/typography';
+import { YarnCard } from '@/components/yarn-card';
 import { useYarnStore } from '@/hooks/use-yarn-store';
+import { router } from 'expo-router';
 
 export default function YarnScreen() {
-
     const yarns = useYarnStore((state) => state.yarns);
     const available = yarns.filter((yarn) => !yarn.archived);
+    const addYarn = () => router.push('/yarn/new');
 
     return (
-        <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-            <ScrollView contentContainerStyle={{ padding: 18, gap: 24 }}>
-                <Text>Logo</Text>
+        <Screen>
+            <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Yarn' }]} />
+            <PageHeader title="Yarn collection" description="Keep track of all yarns in your yarn stash" />
 
-                <View style={{ flexDirection: 'row', gap: 8 }}>
-                    <Link href='/'>
-                        <Text>Home</Text>
-                        <Text>{'>'}</Text>
-                        <Text>Yarn</Text>
-                    </Link>
-                </View>
+            {available.length === 0 ? (
+                <EmptyState heading="Your stash is empty" actionLabel="Add yarn" onAction={addYarn} />
+            ) : (
+                <>
+                    <AddCard label="Add new yarn" onPress={addYarn} />
+                    <Heading>Available yarn</Heading>
+                    <Grid>
+                        {available.map((yarn) => (
+                            <YarnCard key={yarn.id} yarn={yarn} onPress={() => router.push(`/yarn/${yarn.id}`)} />
+                        ))}
+                    </Grid>
+                </>
+            )}
 
-                <View>
-                    <Text>Yarn collection</Text>
-                    <Text>Keep track of all yarns in your yarn stach.</Text>
-                </View>
-
-                <Link href='/yarn/new'>+ Add new yarn</Link>
-
-                <View>
-                    <Text>Available yarn</Text>
-                    {
-                        available.map((yarn) => (
-                            <Link key={yarn.id} href={`/yarn/${yarn.id}`}>
-                                <Text>{yarn.name}</Text>
-                            </Link>
-                        ))
-                    }
-                </View>
-
-                <Link href='/yarn/archive'>See used yarn archive {'>'}</Link>
-            </ScrollView>
-        </SafeAreaView>
+            <LinkRow label="See yarn archive →" onPress={() => router.push('/yarn/archive')} />
+        </Screen>
     );
 }

@@ -3,10 +3,15 @@ import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { projects } from '@/data/projects';
-import { yarns } from '@/data/yarns';
+import { useYarnStore } from '@/hooks/use-yarn-store';
 
 export default function HomeScreen() {
+
   const wipCount = projects.filter((project) => project.status === 'active').length;
+
+  const yarns = useYarnStore((state) => state.yarns);
+  const yarnCount = yarns.filter((yarn) => !yarn.archived).length;
+
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <ScrollView contentContainerStyle={{ padding: 18, gap: 24 }}>
@@ -22,7 +27,7 @@ export default function HomeScreen() {
 
           <Link href='/yarn'>
             <Text>Yarn collection {'>'}</Text>
-            <Text>{yarns.length} yarns</Text>
+            <Text>{yarnCount} yarn types</Text>
           </Link>
         </View>
 

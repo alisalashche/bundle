@@ -1,13 +1,15 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { yarns } from '@/data/yarns';
+
+import { useYarnStore } from '@/hooks/use-yarn-store';
 
 export default function YarnDetailScreen() {
     // reads the variable from the URL
     // when open /yarn/2, id is "2"
     const { id } = useLocalSearchParams<{ id: string }>();
-
+    
+    const yarns = useYarnStore((state) => state.yarns);
     const yarn = yarns.find((yarn) => yarn.id === id);
     if (!yarn) {
         return (

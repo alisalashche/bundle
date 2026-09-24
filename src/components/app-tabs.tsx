@@ -1,8 +1,6 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
-// The 4 tabs from the Figma "nav" component.
-// NativeTabs = the real iOS tab bar (a native feature, bonus points).
-// Icons are SF Symbols, Apple's built-in icon set.
+// Icons - SF Symbols, Apple's built-in icon set
 export default function AppTabs() {
   return (
     <NativeTabs>

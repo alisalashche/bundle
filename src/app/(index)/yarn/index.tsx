@@ -2,12 +2,7 @@ import { Link } from "expo-router";
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-//example data
-const yarns = [
-    { id: '1', name: 'Correl cotton' },
-    { id: '2', name: 'Merino soft' },
-    { id: '3', name: 'Chunky wool' }
-];
+import { yarns } from '@/data/yarns';
 
 export default function YarnScreen() {
     return (

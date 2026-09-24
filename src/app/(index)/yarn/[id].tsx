@@ -1,11 +1,21 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { yarns } from '@/data/yarns';
 
 export default function YarnDetailScreen() {
     // reads the variable from the URL
     // when open /yarn/2, id is "2"
     const { id } = useLocalSearchParams<{ id: string }>();
+
+    const yarn = yarns.find((yarn) => yarn.id === id);
+    if (!yarn) {
+        return (
+            <SafeAreaView style={{ flex: 1 }}>
+                <Text>Yarn not found</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }} edges={['top']}>
@@ -17,15 +27,15 @@ export default function YarnDetailScreen() {
                     <Text>{'>'}</Text>
                     <Link href="/yarn">Yarn</Link>
                     <Text>{'>'}</Text>
-                    <Text>Yarn {id}</Text>
+                    <Text>{yarn.name}</Text>
                 </View>
 
                 <Text>Photo</Text>
-                <Text>Yarn {id}</Text>
+                <Text>{yarn.name}</Text>
 
                 <View>
-                    <Text>Quantity: 8</Text>
-                    <Text>Material: Cotton</Text>
+                    <Text>Quantity: {yarn.quantity}</Text>
+                    <Text>Material: {yarn.material}</Text>
                     <Text>Length: 150m</Text>
                     <Text>Weight: 200g</Text>
                     <Text>Needles size: 4mm</Text>

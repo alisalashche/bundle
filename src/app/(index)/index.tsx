@@ -2,7 +2,11 @@ import { Link } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { projects } from '@/data/projects';
+import { yarns } from '@/data/yarns';
+
 export default function HomeScreen() {
+  const wipCount = projects.filter((project) => project.status === 'active').length;
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <ScrollView contentContainerStyle={{ padding: 18, gap: 24 }}>
@@ -13,12 +17,12 @@ export default function HomeScreen() {
 
           <Link href='/projects'>
             <Text>Projects {'>'}</Text>
-            <Text>0 WIPs</Text>
+            <Text>{wipCount} WIPs</Text>
           </Link>
 
           <Link href='/yarn'>
             <Text>Yarn collection {'>'}</Text>
-            <Text>0 yarns</Text>
+            <Text>{yarns.length} yarns</Text>
           </Link>
         </View>
 

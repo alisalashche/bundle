@@ -21,7 +21,7 @@ export const Body = styled.Text`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-// subtitiles
+// copy muted
 export const Muted = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;

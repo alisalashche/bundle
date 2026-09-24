@@ -47,6 +47,18 @@ type Form = {
 
 const yarnTypes: YarnType[] = ['skeins', 'balls', 'hanks', 'bobins'];
 
+type Errors = Partial<Record<keyof Form, string>>;
+
+const validate = (form: Form): Errors => {
+    const errors: Errors = {};
+    if (!form.name.trim()) errors.name = 'Add the brand or name from the label';
+    if (!form.material.trim()) errors.material = 'Add the material(s)';
+    if (!(Number(form.lengthM) > 0)) errors.lengthM = 'Enter the length in meters';
+    if (!(Number(form.weightG) > 0)) errors.weightG = 'Enter the weight in grams';
+    if (!(Number(form.quantity) >= 1)) errors.quantity = 'How many do you have?';
+    return errors;
+};
+
 export default function NewYarnScreen() {
     const addYarn = useYarnStore((state) => state.addYarn);
     const [step, setStep] = useState<1 | 2>(1);
@@ -54,14 +66,22 @@ export default function NewYarnScreen() {
         name: '', material: '', lengthM: '', weightG: '',
         hookSize: '', needleSize: '', shop: '', quantity: '1',
     });
-    const [type, setType] = useState<YarnType>('skeins');
-    const [photoUri, setPhotoUri] = useState<string>();
+
+    //For errors
+    const [showErrors, setShowErrors] = useState(false);
+    const errors = validate(form);
+    const isValid = Object.keys(errors).length === 0;
 
     // Returns the two props every field needs, so we can spread them: {...bind('name')}
     const bind = (key: keyof Form) => ({
         value: form[key],
         onChangeText: (value: string) => setForm({ ...form, [key]: value }),
+        error: showErrors ? errors[key] : undefined,
     });
+
+    //For photoss
+    const [type, setType] = useState<YarnType>('skeins');
+    const [photoUri, setPhotoUri] = useState<string>();
 
     const choosePhoto = async (source: () => Promise<string | undefined>) => {
         const uri = await source();
@@ -92,23 +112,22 @@ export default function NewYarnScreen() {
                     <Button
                         label="Next"
                         align="flex-end"
-                        disabled={
-                            !form.name.trim() ||
-                            !form.lengthM.trim() ||
-                            !form.weightG.trim() ||
-                            !form.material.trim() ||
-                            !form.quantity.trim()
-                        }
-                        onPress={() => setStep(2)} />
+                        onPress={() => {
+                            if (!isValid) {
+                                setShowErrors(true);
+                                return;
+                            }
+                            setStep(2);
+                        }} />
                 }
             >
                 <BackLink label="Cancel" />
                 <StepIndicator current={1} total={2} />
                 <CenteredTitle>Label information</CenteredTitle>
 
-                <TextField label="Brand/Name*" placeholder="Cozy 100% wool" {...bind('name')} />
+                <TextField label="Brand/Name" required placeholder="Cozy 100% wool" {...bind('name')} />
 
-                <Label>Type*</Label>
+                <Label>Type</Label>
                 <ChipRow>
                     {yarnTypes.map((option) => (
                         <Chip key={option} label={option} selected={type === option} onPress={() => setType(option)} />
@@ -117,19 +136,19 @@ export default function NewYarnScreen() {
 
                 <Row>
                     <Half>
-                        <TextField label="Material*" placeholder="Wool" {...bind('material')} />
+                        <TextField label="Material" required placeholder="Wool" {...bind('material')} />
                     </Half>
                     <Half>
-                        <TextField label="Quantity you have*" keyboardType="number-pad" {...bind('quantity')} />
+                        <TextField label="Quantity you have" required keyboardType="number-pad" {...bind('quantity')} />
                     </Half>
                 </Row>
 
                 <Row>
                     <Half>
-                        <TextField label="Length* (m)" placeholder="150" keyboardType="number-pad" {...bind('lengthM')} />
+                        <TextField label="Length (m)" required placeholder="150" keyboardType="number-pad" {...bind('lengthM')} />
                     </Half>
                     <Half>
-                        <TextField label="Weight* (g)" placeholder="50" keyboardType="number-pad" {...bind('weightG')} />
+                        <TextField label="Weight (g)" required placeholder="50" keyboardType="number-pad" {...bind('weightG')} />
                     </Half>
                 </Row>
 

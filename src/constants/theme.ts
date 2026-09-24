@@ -10,23 +10,35 @@ export const theme = {
         placeholder: '#D9D9D9', // empty photo boxes, logo box
         secondary: '#8C8C8C',   
         white: '#FFFFFF',
+
+
+        surfaceAlt: '#F5F5F5',  // "See yarn archive" row
+        photoBg: '#F9FAFB',     // empty photo preview
+        tint: '#FFF5F5',        // light red circle behind + icons
+        dark: '#454545',        // small Cancel button, archive link text
     },
     fonts: {
         regular: 'Inter_400Regular',
+        semiBold: 'Inter_600SemiBold',
         bold: 'Inter_700Bold',
+        extraBold: 'Inter_800ExtraBold',
     },
     fontSizes: {
-        xs: 12,
+        caption: 12,
+        xs: 13,
         sm: 14,
+        button: 15,
         md: 16,
         lg: 20,
         xl: 24,
         xxl: 32,
     },
     radius: {
+        xs: 3,   
         sm: 8,
-        md: 12,
-        lg: 16,
+        md: 12, 
+        lg: 16,  
+        xl: 18,  
         full: 999,
     },
     spacing: {

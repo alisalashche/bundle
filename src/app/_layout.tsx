@@ -1,7 +1,16 @@
 import AppTabs from '@/components/app-tabs';
+import { theme } from '@/constants/theme';
+import { Inter_400Regular, Inter_700Bold, useFonts } from '@expo-google-fonts/inter';
+import { ThemeProvider } from 'styled-components/native';
 
-// Root of the app. Same pattern as plant-based-barista: the root renders the tabs.
-// In step 5 the styled-components ThemeProvider will wrap <AppTabs /> here.
 export default function RootLayout() {
-  return <AppTabs />;
+
+  const [fontLoaded] = useFonts({ Inter_400Regular, Inter_700Bold });
+  if (!fontLoaded) return null; //show nothing untill font loaded
+
+  return (
+    <ThemeProvider theme={theme}>
+      <AppTabs />
+    </ThemeProvider>
+  );
 }

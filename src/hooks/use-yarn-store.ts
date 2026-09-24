@@ -11,6 +11,7 @@ interface YarnState {
     addYarn: (yarn: NewYarn) => void;
     deleteYarn: (id: string) => void;
     markAsUsed: (id: string) => void;
+    updateYarn: (id: string, changes: Partial<Yarn>) => void;
 }
 
 export const useYarnStore = create<YarnState>()(
@@ -25,7 +26,7 @@ export const useYarnStore = create<YarnState>()(
                         ...state.yarns,
                     ],
                 })),
-
+            
             deleteYarn: (id) =>
                 set((state) => ({
                     yarns: state.yarns.filter((yarn) => yarn.id !== id),
@@ -34,6 +35,11 @@ export const useYarnStore = create<YarnState>()(
             markAsUsed: (id) =>
                 set((state) => ({
                     yarns: state.yarns.map((yarn) => (yarn.id === id ? { ...yarn, archived: true } : yarn)),
+                })),
+            
+            updateYarn: (id, changes) =>
+                set((state) => ({
+                    yarns: state.yarns.map((yarn) => (yarn.id === id ? { ...yarn, ...changes } : yarn)),
                 })),
         }),
         {

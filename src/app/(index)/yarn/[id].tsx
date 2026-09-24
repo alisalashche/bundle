@@ -2,6 +2,7 @@ import { Image } from "expo-image";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { NotesBox } from '@/components/notes-box';
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
 
@@ -13,6 +14,7 @@ export default function YarnDetailScreen() {
     const yarns = useYarnStore((state) => state.yarns);
     const deleteYarn = useYarnStore((state) => state.deleteYarn);
     const markAsUsed = useYarnStore((state) => state.markAsUsed);
+    const updateYarn = useYarnStore((state) => state.updateYarn);
 
     const yarn = yarns.find((yarn) => yarn.id === id);
     if (!yarn) {
@@ -72,7 +74,7 @@ export default function YarnDetailScreen() {
                     <Text>Type: Skeins</Text>
                 </View>
 
-                <Text>Notes here if added</Text>
+                <NotesBox notes={yarn.notes} onSave={(notes) => updateYarn(yarn.id, { notes })} />
 
                 <Text>Assign to a project</Text>
                 {!yarn.archived && (

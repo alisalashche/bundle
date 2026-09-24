@@ -1,6 +1,6 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
-// Icons - SF Symbols, Apple's built-in icon set
+// SF symbols, Apple's built-in icon set
 export default function AppTabs() {
   return (
     <NativeTabs>

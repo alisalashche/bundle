@@ -1,12 +1,13 @@
 import { Link, useLocalSearchParams } from 'expo-router';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { projects } from '@/data/projects';
+import { useProjectStore } from '@/hooks/use-project-store';
 
 export default function ProjectDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const project = projects.find((item) => item.id === id);
+    const project = useProjectStore((state) => state.projects.find((item) => item.id === id));
+    const toggleStep = useProjectStore((state) => state.toggleStep);
 
     if (!project) {
         return (
@@ -45,14 +46,13 @@ export default function ProjectDetailScreen() {
                     <Text>H/N size: {project.hookNeedleSize}</Text>
                     <Text>Stitches: {project.stitches}</Text>
                 </View>
-                
+
                 <View>
                     <Text>Steps</Text>
-
                     {project.steps.map((step) => (
-                        <Text key={step.id}>
-                            {step.done ? '[x]' : '[ ]'} {step.title}
-                        </Text>
+                        <Pressable key={step.id} onPress={() => toggleStep(project.id, step.id)}>
+                            <Text>{step.done ? '[x]' : '[ ]'} {step.title}</Text>
+                        </Pressable>
                     ))}
                 </View>
             </ScrollView>

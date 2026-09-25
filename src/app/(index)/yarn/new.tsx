@@ -1,12 +1,12 @@
 import { BackLink } from '@/components/back-link';
 import { Button } from '@/components/button';
 import { Chip } from '@/components/chip';
-import { Half, Row } from '@/components/layout';
+import { ChipRow, Half, Row } from '@/components/layout';
 import { PhotoOption } from '@/components/photo-option';
 import { Screen } from '@/components/screen';
 import { StepIndicator } from '@/components/step-indicator';
 import { TextField } from '@/components/text-field';
-import { Label, Title } from '@/components/typography';
+import { Label, CenteredTitle } from '@/components/typography';
 import styled from 'styled-components/native';
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
@@ -16,18 +16,7 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
 
-
 //Styled component
-const CenteredTitle = styled(Title)`
-  text-align: center;
-`;
-
-const ChipRow = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.sm}px;
-`;
-
 const Preview = styled(Image)`
   width: 100%;
   height: 260px;

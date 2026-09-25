@@ -7,7 +7,7 @@ import { useYarnStore } from '@/hooks/use-yarn-store';
 
 export default function HomeScreen() {
 
-  const wipCount = projects.filter((project) => project.status === 'active').length;
+  //const wipCount = projects.filter((project) => project.status === 'active').length;
 
   const yarns = useYarnStore((state) => state.yarns);
   const yarnCount = yarns.filter((yarn) => !yarn.archived).length;
@@ -22,7 +22,7 @@ export default function HomeScreen() {
 
           <Link href='/projects'>
             <Text>Projects {'>'}</Text>
-            <Text>{wipCount} WIPs</Text>
+            <Text>{/* {wipCount} */} WIPs</Text>
           </Link>
 
           <Link href='/yarn'>

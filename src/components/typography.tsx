@@ -7,6 +7,10 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.colors.black};
 `;
 
+export const CenteredTitle = styled(Title)`
+  text-align: center;
+`;
+
 // h2
 export const Heading = styled.Text`
   font-family: ${({ theme }) => theme.fonts.bold};
@@ -33,4 +37,10 @@ export const Label = styled.Text`
   font-family: ${({ theme }) => theme.fonts.bold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
   color: ${({ theme }) => theme.colors.text};
+`;
+
+export const MonthLabel = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.bold};
+  font-size: ${({ theme }) => theme.fontSizes.lg}px;
+  color: ${({ theme }) => theme.colors.black};
 `;

@@ -23,6 +23,18 @@ export const pickPhoto = async () => {
     return savePhoto(result.assets[0].uri);
 };
 
+export const pickPhotos = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsMultipleSelection: true,
+        quality: 0.7,
+    });
+
+    if (result.canceled) return [];
+    
+    return Promise.all(result.assets.map((asset) => savePhoto(asset.uri)));
+};
+
 export const takePhoto = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     

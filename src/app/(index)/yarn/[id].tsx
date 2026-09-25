@@ -57,7 +57,7 @@ export default function YarnDetailScreen() {
                 {yarn.photoUri && (
                     <Image
                         source={{ uri: yarn.photoUri }}
-                        style={{ width: '100%', height: 200 }}
+                        style={{ width: '100%', height: 200, borderRadius: '20px', }}
                     />
                 )}
 

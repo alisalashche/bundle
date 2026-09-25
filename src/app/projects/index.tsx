@@ -1,52 +1,71 @@
-import { Link } from 'expo-router';
-import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Fragment } from 'react';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { EmptyState } from '@/components/empty-state';
+import { CardGrid } from '@/components/layout';
+import { PageHeader } from '@/components/page-header';
+import { ProjectCard } from '@/components/project-card';
+import { Screen } from '@/components/screen';
+import { Heading, MonthLabel } from '@/components/typography';
+import { openNewProject } from '@/hooks/use-project-draft-store';
+import { useProjectStore } from '@/hooks/use-project-store';
+import type { Project } from '@/types/project';
+import { groupByMonth } from '@/utils/dates';
 
-import { projects } from '@/data/projects';
+type ProjectSectionProps = { title: string; groups: { title: string; items: Project[] }[] };
+
+function ProjectSection({ title, groups }: ProjectSectionProps) {
+  return (
+    <>
+      <Heading>{title}</Heading>
+      {groups.map((group) => (
+        <Fragment key={group.title}>
+          <MonthLabel>{group.title}</MonthLabel>
+          <CardGrid>
+            {group.items.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </CardGrid>
+        </Fragment>
+      ))}
+    </>
+  );
+}
 
 export default function ProjectsScreen() {
-  //split the same array into two lists with filter
+  const projects = useProjectStore((state) => state.projects);
   const active = projects.filter((project) => project.status === 'active');
-  const finished = projects.filter((project) => project.status === 'finished');
+  const finished = projects
+    .filter((project) => project.status === 'finished' && project.finishedAt)
+    .sort((a, b) => b.finishedAt!.localeCompare(a.finishedAt!));
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-      <ScrollView contentContainerStyle={{ padding: 18, gap: 24 }}>
-        <Text>Logo</Text>
+    <Screen>
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Projects' }]} />
+      <PageHeader title="Projects" description="Keep track of all project’s materials and progress" />
 
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          <Link href="/">Home</Link>
-          <Text>{'>'}</Text>
-          <Text>Projects</Text>
-        </View>
-
-        <View>
-          <Text>Projects</Text>
-          <Text>Keep track of all project’s materials and progress</Text>
-        </View>
-
-        <Text>+ New project</Text>
-
-        <View>
-          <Text>Works in progress x{active.length}</Text>
-          {active.map((project) => (
-            <Link key={project.id} href={`/projects/${project.id}`}>
-              <Text>{project.name}</Text>
-            </Link>
-          ))}
-        </View>
-
-        {finished.length > 0 && (
-          <View>
-            <Text>Admire your works</Text>
-            {finished.map((project) => (
-              <Link key={project.id} href={`/projects/${project.id}`}>
-                <Text>{project.name}</Text>
-              </Link>
-            ))}
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+      {projects.length === 0 ? (
+        <EmptyState
+          heading="No projects yet"
+          text="Plan your first make: pick yarn, add steps and track your progress."
+          actionLabel="New project"
+          onAction={openNewProject}
+        />
+      ) : (
+        <>
+          {active.length > 0 && (
+            <ProjectSection
+              title={`Works in progress  x${active.length}`}
+              groups={groupByMonth(active, (project) => project.createdAt)}
+            />
+          )}
+          {finished.length > 0 && (
+            <ProjectSection
+              title="Admire your works"
+              groups={groupByMonth(finished, (project) => project.finishedAt!)}
+            />
+          )}
+        </>
+      )}
+    </Screen>
   );
 }

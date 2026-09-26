@@ -8,3 +8,6 @@ export const getProgress = (project: Project) => {
     const done = project.steps.filter((step) => step.done).length;
     return Math.round((done / project.steps.length) * 100);
 };
+
+export const getYarnNeeded = (project: Project) =>
+    project.yarn.reduce((total, item) => total + item.quantity, 0);

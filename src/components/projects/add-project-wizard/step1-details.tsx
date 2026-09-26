@@ -3,7 +3,7 @@ import { Tag } from '@/components/general-styled-components/buttons/tag';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { BackButton } from '@/components/general-styled-components/navigation/back-button';
 import { Label } from '@/components/general-styled-components/typography';
-import { TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/wizard/field';
+import { RequiredMark, TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/wizard/field';
 import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
 import { useProjectDraftStore } from '@/hooks/use-project-draft-store';
 import type { Craft, Difficulty } from '@/types/project';
@@ -28,10 +28,9 @@ export function DetailsStep() {
 
     const errors = {
         name: draft.name.trim() ? undefined : 'Give your project a name',
-        yarnNeeded: Number(draft.yarnNeeded) >= 1 ? undefined : 'How many skeins does the pattern need?',
-        hookNeedleSize: Number(draft.hookNeedleSize) >= 1 ? undefined : 'Enter hook/needles size needed for this project',
+        hookNeedleSize: draft.hookNeedleSize.trim() ? undefined : 'Enter hook/needles size needed for this project',
     };
-    const isValid = !errors.name && !errors.yarnNeeded;
+    const isValid = !errors.name && !errors.hookNeedleSize;
 
     const next = () => {
         if (!isValid) {
@@ -47,7 +46,7 @@ export function DetailsStep() {
             <WizardHeader step={1} total={4} title="Tell about project" />
 
             <TagsGroup>
-                <Label>Type:</Label>
+                <Label>Type:<RequiredMark>*</RequiredMark></Label>
                 <TagsRow>
                     {crafts.map((craft) => (
                         <Tag
@@ -67,15 +66,6 @@ export function DetailsStep() {
                 value={draft.name}
                 onChangeText={(value) => setField('name', value)}
                 error={showErrors ? errors.name : undefined}
-            />
-            <TextField
-                label="Yarn quantity"
-                required
-                placeholder="8"
-                keyboardType="number-pad"
-                value={draft.yarnNeeded}
-                onChangeText={(value) => setField('yarnNeeded', value)}
-                error={showErrors ? errors.yarnNeeded : undefined}
             />
             <TextField
                 label="Hook/Needles size"

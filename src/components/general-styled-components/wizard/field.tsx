@@ -18,7 +18,7 @@ const FieldGroup = styled.View`
   gap: ${({ theme }) => theme.spacing.sm}px;
 `;
 
-const RequiredMark = styled.Text`
+export const RequiredMark = styled.Text`
   color: ${({ theme }) => theme.colors.primary};
 `;
 

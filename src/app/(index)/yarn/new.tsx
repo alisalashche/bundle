@@ -7,7 +7,7 @@ import { LinkButton } from '@/components/general-styled-components/navigation/gr
 import { Label } from '@/components/general-styled-components/typography';
 import { TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/wizard/field';
 import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
-import styled from 'styled-components/native';
+import {styled} from 'styled-components/native';
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
 import type { YarnType } from '@/types/yarn';

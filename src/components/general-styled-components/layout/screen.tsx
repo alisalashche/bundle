@@ -9,11 +9,11 @@ const Safe = styled(SafeAreaView)`
 
 // .attrs() to set props (not only styles) from the theme
 const Scroll = styled.ScrollView.attrs(({ theme }) => ({
-    contentContainerStyle: {
-        padding: theme.spacing.lg,
-        gap: theme.spacing.lg
-    },
-    keyboardShouldPersistTaps: 'handled' as const,
+  contentContainerStyle: {
+    padding: theme.spacing.lg,
+    gap: theme.spacing.lg
+  },
+  keyboardShouldPersistTaps: 'handled' as const,
 }))``;
 
 const Header = styled.View`
@@ -45,22 +45,24 @@ const Footer = styled.View`
 `;
 
 type ScreenProps = {
-    children: ReactNode;
-    footer?: ReactNode; // fixed button at the bottom of create screens
+  children: ReactNode;
+  footer?: ReactNode; // fixed button at the bottom of create screens
 };
 
 export function Screen({ children, footer }: ScreenProps) {
-    return (
-        <Safe edges={footer ? ['top', 'bottom'] : ['top']}>
-            <Scroll>
-                <Header>
-                    <LogoBox>
-                        <LogoText>Bundle</LogoText>
-                    </LogoBox>
-                </Header>
-                <Content>{children}</Content>
-            </Scroll>
-            {footer && <Footer>{footer}</Footer>}
-        </Safe>
-    );
+  return (
+    <Safe edges={footer ? ['top', 'bottom'] : ['top']}>
+      <Scroll>
+        {!footer &&
+          <Header>
+            <LogoBox>
+              <LogoText>Bundle</LogoText>
+            </LogoBox>
+          </Header>
+        }
+        <Content>{children}</Content>
+      </Scroll>
+      {footer && <Footer>{footer}</Footer>}
+    </Safe>
+  );
 }

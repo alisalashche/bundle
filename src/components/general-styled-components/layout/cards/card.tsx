@@ -1,11 +1,42 @@
 import { Image } from 'expo-image';
 import { SymbolView, type SymbolViewProps } from 'expo-symbols';
-import { useTheme, styled } from 'styled-components/native';
+import { createContext, useContext, useState, type ReactNode } from 'react';
+import { styled, useTheme } from 'styled-components/native';
 
 type Size = 'small' | 'big';
 
+// grid measures its own width 
+const GridItemWidthContext = createContext<number | undefined>(undefined);
+
+const GridContainer = styled.View<{ $gap: number }>`
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: ${({ $gap }) => $gap}px;
+`;
+
+type GridProps = { size: Size; children: ReactNode };
+
+export function Grid({ size, children }: GridProps) {
+    const theme = useTheme();
+    const [gridWidth, setGridWidth] = useState(0);
+
+    const columns = size === 'big' ? 2 : 3;
+    const gap = size === 'big' ? theme.spacing.md : theme.spacing.sm;
+    
+    // floor so rounding never pushes the last card onto a new row
+    const itemWidth = Math.floor((gridWidth - gap * (columns - 1)) / columns);
+
+    return (
+        <GridItemWidthContext.Provider value={itemWidth}>
+            <GridContainer $gap={gap} onLayout={(event) => setGridWidth(event.nativeEvent.layout.width)}>
+                {gridWidth > 0 && children /*wait for calculation*/}
+            </GridContainer>
+        </GridItemWidthContext.Provider>
+    );
+}
+
 const Container = styled.Pressable<{ $size: Size; $width?: number; $selected: boolean; $captioned: boolean }>`
-  width: ${({ $size, $width }) => ($width ? `${$width}px` : $size === 'small' ? '31.7%' : '48.8%')};
+  ${({ $width }) => ($width !== undefined ? `width: ${$width}px;` : '')}
   height: ${({ $size }) => ($size === 'small' ? 123 : 187)}px;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radius.md}px;
@@ -58,14 +89,14 @@ const CornerText = styled.Text<{ $size: Size }>`
 
 export type CardProps = {
     size: Size;
-    title?: string;          
+    title?: string;
     subtitle?: string;
     imageUri?: string;
-    badge?: string;          
+    badge?: string;
     badgeIcon?: SymbolViewProps['name'];
     onBadgePress?: () => void;
     selected?: boolean;
-    width?: number;         
+    width?: number;
     accessibilityLabel?: string;
     onPress: () => void;
 };
@@ -87,6 +118,8 @@ export function Card({
     const captioned = Boolean(title);
     const showCorner = selected || Boolean(badge) || Boolean(badgeIcon);
 
+    const gridItemWidth = useContext(GridItemWidthContext);
+
     return (
         <Container
             accessibilityRole="button"
@@ -94,7 +127,7 @@ export function Card({
             accessibilityState={{ selected }}
             onPress={onPress}
             $size={size}
-            $width={width}
+            $width={width ?? gridItemWidth}
             $selected={selected}
             $captioned={captioned}
         >
@@ -132,4 +165,4 @@ export function Card({
             )}
         </Container>
     );
-}
+} 

@@ -1,16 +1,15 @@
 import { router } from 'expo-router';
 import { create } from 'zustand';
-import type { Craft, Difficulty, ProjectStep } from '@/types/project';
+import type { Craft, Difficulty, ProjectStep, AssignedYarn } from '@/types/project';
 
 export type ProjectDraft = {
     name: string;
     craft: Craft;
     difficulty: Difficulty;
-    yarnNeeded: string;      // text inputs hold strings; converted when saving
     hookNeedleSize: string;
     stitches: string;
     tutorialUrl: string;
-    yarnIds: string[];
+    yarn: AssignedYarn[];
     steps: ProjectStep[];
     notes: string;
     referencePhotos: string[];
@@ -20,11 +19,10 @@ const emptyDraft: ProjectDraft = {
     name: '',
     craft: 'knitting',
     difficulty: 'normal',
-    yarnNeeded: '',
     hookNeedleSize: '',
     stitches: '',
     tutorialUrl: '',
-    yarnIds: [],
+    yarn: [],
     steps: [],
     notes: '',
     referencePhotos: [],
@@ -38,7 +36,9 @@ interface DraftState {
     goTo: (step: WizardStep) => void;
     setField: <K extends keyof ProjectDraft>(key: K, value: ProjectDraft[K]) => void;
     toggleYarn: (yarnId: string) => void;
+    setYarnQuantity: (yarnId: string, quantity: number) => void;
     addStep: (step: Omit<ProjectStep, 'id' | 'done'>) => void;
+    updateStep: (id: string, changes: Omit<ProjectStep, 'id' | 'done'>) => void;
     removeStep: (id: string) => void;
     reset: () => void;
 }
@@ -53,16 +53,34 @@ export const useProjectDraftStore = create<DraftState>()((set) => ({
 
     toggleYarn: (yarnId) =>
         set((state) => {
-            const { yarnIds } = state.draft;
-            const next = yarnIds.includes(yarnId) ? yarnIds.filter((id) => id !== yarnId) : [...yarnIds, yarnId];
-            return { draft: { ...state.draft, yarnIds: next } };
+            const isAssigned = state.draft.yarn.some((item) => item.yarnId === yarnId);
+            const yarn = isAssigned
+                ? state.draft.yarn.filter((item) => item.yarnId !== yarnId)
+                : [...state.draft.yarn, { yarnId, quantity: 1 }];
+            return { draft: { ...state.draft, yarn } };
         }),
+
+    setYarnQuantity: (yarnId, quantity) =>
+        set((state) => ({
+            draft: {
+                ...state.draft,
+                yarn: state.draft.yarn.map((item) => (item.yarnId === yarnId ? { ...item, quantity } : item)),
+            },
+        })),
 
     addStep: (step) =>
         set((state) => ({
             draft: {
                 ...state.draft,
                 steps: [...state.draft.steps, { ...step, id: Date.now().toString(), done: false }],
+            },
+        })),
+    
+    updateStep: (id, changes) =>
+        set((state) => ({
+            draft: {
+                ...state.draft,
+                steps: state.draft.steps.map((step) => (step.id === id ? { ...step, ...changes } : step)),
             },
         })),
 
@@ -74,7 +92,7 @@ export const useProjectDraftStore = create<DraftState>()((set) => ({
     reset: () => set({ step: 1, draft: emptyDraft }),
 }));
 
-//start new wizard from anywhere (FAB, empty state...)
+//to start new wizard from anywhere (FAB, empty state...)
 export const openNewProject = () => {
     useProjectDraftStore.getState().reset();
     router.push('/projects/new');

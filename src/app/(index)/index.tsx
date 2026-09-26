@@ -1,5 +1,6 @@
+import { Grid } from '@/components/general-styled-components/layout/cards/card';
 import { ProjectCard } from '@/components/general-styled-components/layout/cards/project-card';
-import { GridBig, Section } from '@/components/general-styled-components/layout/layout-block';
+import { Section } from '@/components/general-styled-components/layout/layout-block';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { BundleRow } from '@/components/general-styled-components/navigation/bundle-preview';
 import { CenteredDescription, Title } from '@/components/general-styled-components/typography';
@@ -7,7 +8,7 @@ import { useProjectStore } from '@/hooks/use-project-store';
 import { useYarnStore } from '@/hooks/use-yarn-store';
 import { getCover } from '@/utils/project';
 import { router } from 'expo-router';
-import styled from 'styled-components/native';
+import { styled } from 'styled-components/native';
 
 const Rows = styled.View`
   gap: ${({ theme }) => theme.spacing.lg}px;
@@ -57,11 +58,11 @@ export default function HomeScreen() {
         {finished.length === 0 ? (
           <EmptyText>Complete your first work</EmptyText>
         ) : (
-          <GridBig>
+          <Grid size='big'>
             {finished.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
-          </GridBig>
+          </Grid>
         )}
       </Section>
     </Screen>

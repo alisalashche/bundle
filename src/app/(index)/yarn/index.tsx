@@ -1,7 +1,8 @@
 import { AddButton } from '@/components/general-styled-components/buttons/add-button';
 import { YarnCard } from '@/components/general-styled-components/layout/cards/yarn-card';
 import { EmptyState } from '@/components/general-styled-components/layout/empty-state';
-import { GridSmall, PageHeader } from '@/components/general-styled-components/layout/layout-block';
+import { Grid } from '@/components/general-styled-components/layout/cards/card';
+import { PageHeader } from '@/components/general-styled-components/layout/layout-block';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { Breadcrumbs } from '@/components/general-styled-components/navigation/breadcrumbs';
 import { LinkButton } from '@/components/general-styled-components/navigation/grey-button';
@@ -25,11 +26,11 @@ export default function YarnScreen() {
                 <>
                     <AddButton label="Add new yarn" onPress={addYarn} />
                     <Heading>Available yarn</Heading>
-                    <GridSmall>
+                        <Grid size='small'>
                         {available.map((yarn) => (
                             <YarnCard key={yarn.id} yarn={yarn} onPress={() => router.push(`/yarn/${yarn.id}`)} />
                         ))}
-                    </GridSmall>
+                    </Grid>
                 </>
             )}
 

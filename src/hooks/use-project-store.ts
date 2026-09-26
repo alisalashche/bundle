@@ -51,6 +51,19 @@ export const useProjectStore = create<ProjectState>()(
                     ),
                 })),
         }),
-        { name: 'bundle-projects', storage: createJSONStorage(() => AsyncStorage) }
+        {
+            name: 'bundle-projects',
+            storage: createJSONStorage(() => AsyncStorage),
+            //I had previously version 0 where i could choose only one yarn 
+            version: 1,
+            migrate: (saved: any) => ({
+                ...saved,
+                projects: (saved?.projects ?? []).map((project: any) => ({
+                    ...project,
+                    yarn: project.yarn ?? (project.yarnIds ?? []).map((yarnId: string) => ({ yarnId, quantity: 1 })),
+                    hookNeedleSize: project.hookNeedleSize ?? '',
+                })),
+            }),
+        }
     )
 );

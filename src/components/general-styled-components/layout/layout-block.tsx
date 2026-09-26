@@ -1,5 +1,5 @@
 import { styled } from 'styled-components/native';
-import { Description, Title, MonthLabel } from '../typography';
+import { Description, MonthLabel, Title } from '../typography';
 
 export const Row = styled.View`
   flex-direction: row;
@@ -11,20 +11,6 @@ export const Half = styled.View`
 `;
 
 export const Section = styled.View`
-  gap: ${({ theme }) => theme.spacing.md}px;
-`;
-
-//Grid
-
-export const GridSmall = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.sm}px;
-`;
-
-export const GridBig = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing.md}px;
 `;
 

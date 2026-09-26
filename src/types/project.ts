@@ -9,6 +9,11 @@ export type ProjectStep = {
     done: boolean;
 };
 
+export type AssignedYarn = {
+    yarnId: string;
+    quantity: number;
+}
+
 export type ProgressLog = {
     id: string;
     date: string;
@@ -24,11 +29,10 @@ export type Project = {
     name: string;
     craft: Craft;
     difficulty: Difficulty;
-    yarnNeeded: number;
-    hookNeedleSize?: string;
+    hookNeedleSize: string;
     stitches?: string;
     tutorialUrl?: string;
-    yarnIds: string[];         // yarn assigned from your stash
+    yarn: AssignedYarn[];
     steps: ProjectStep[];
     notes?: string;
     referencePhotos: string[];

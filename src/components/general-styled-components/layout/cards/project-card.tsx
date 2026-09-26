@@ -1,8 +1,8 @@
-import { router } from 'expo-router';
 import type { Project } from '@/types/project';
 import { formatShort } from '@/utils/dates';
 import { getCover } from '@/utils/project';
-import { Card } from './card';
+import { router } from 'expo-router';
+import { Card } from './grid-card';
 
 export function ProjectCard({ project }: { project: Project }) {
   const subtitle = project.finishedAt

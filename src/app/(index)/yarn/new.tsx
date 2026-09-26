@@ -1,13 +1,13 @@
 import { Button } from '@/components/general-styled-components/buttons/button';
-import { Tag } from '@/components/general-styled-components/buttons/tag';
+import { LinkButton } from '@/components/general-styled-components/buttons/grey-button';
+import { TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/inputs/field';
+import { Tag } from '@/components/general-styled-components/inputs/tag';
 import { Half, Row } from '@/components/general-styled-components/layout/layout-block';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { BackButton } from '@/components/general-styled-components/navigation/back-button';
-import { LinkButton } from '@/components/general-styled-components/navigation/grey-button';
 import { Label } from '@/components/general-styled-components/typography';
-import { TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/wizard/field';
 import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
-import {styled} from 'styled-components/native';
+import { styled } from 'styled-components/native';
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
 import type { YarnType } from '@/types/yarn';

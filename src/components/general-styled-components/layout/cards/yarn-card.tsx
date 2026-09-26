@@ -1,6 +1,6 @@
-import type { SymbolViewProps } from 'expo-symbols';
 import type { Yarn } from '@/types/yarn';
-import { Card } from './card';
+import type { SymbolViewProps } from 'expo-symbols';
+import { Card } from './grid-card';
 
 type YarnCardProps = {
   yarn: Yarn;

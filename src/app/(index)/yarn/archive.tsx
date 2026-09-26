@@ -1,50 +1,54 @@
-import { Image } from "expo-image";
-import { Link } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { Grid } from "@/components/general-styled-components/layout/cards/grid-card";
+import { YarnCard } from "@/components/general-styled-components/layout/cards/yarn-card";
+import { EmptyState } from "@/components/general-styled-components/layout/empty-state";
+import { PageHeader, Section, MonthHeader } from "@/components/general-styled-components/layout/layout-block";
+import { Breadcrumbs } from "@/components/general-styled-components/navigation/breadcrumbs";
+import { Screen } from '@/components/general-styled-components/layout/screen';
+import { Fragment } from "react/jsx-runtime";
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
+import { groupByMonth } from "@/utils/dates";
+import { confirmDelete } from "@/utils/yarn";
 
 export default function YarnArchiveScreen() {
 
     const yarns = useYarnStore((state) => state.yarns);
     const archived = yarns.filter((yarn) => yarn.archived);
+    const deleteYarn = useYarnStore((state) => state.deleteYarn);
+
     return (
-        <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-            <ScrollView contentContainerStyle={{ padding: 18, gap: 24 }}>
-                <Text>Logo</Text>
-
-                <View style={{ flexDirection: 'row', gap: 8 }}>
-                    <Link href="/">Home</Link>
-                    <Text>{'>'}</Text>
-                    <Link href="/yarn">Yarn</Link>
-                    <Text>{'>'}</Text>
-                    <Text>Yarn archive</Text>
-                </View>
-
-                <View>
-                    <Text>Yarn archive</Text>
-                    <Text>All yarns that you already used</Text>
-                </View>
-
+        <Screen>
+            <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Yarn', href: '/yarn' }, { label: 'Yarn archive' }]} />
+            <PageHeader title="Yarn archive" description="All yarns that you already used." />
+            <Section>
                 {archived.length === 0 ? (
-                    <Text>Nothing here yet</Text>
+                    <EmptyState
+                        heading="No yarn is archived"
+                        text="Seems like you have not marked any of your yarns as used"
+                    />
                 ) : (
                     archived.map((yarn) => (
-                        <Link key={yarn.id} href={`/yarn/${yarn.id}`}>
-                            {yarn.photoUri && (
-                                <Image
-                                    source={{ uri: yarn.photoUri }}
-                                    style={{ width: '100%', height: 200 }}
-                                />
-                            )}
-                            <Text>{yarn.name}</Text>
-                        </Link>
+                        groupByMonth(archived, (yarn) => yarn.createdAt).map((group) => (
+                            <Fragment key={group.title}>
+                                <MonthHeader title={group.title} />
+                                <Grid size='small'>
+                                    {group.items.map((yarn) => (
+                                        <YarnCard
+                                            key={yarn.id}
+                                            yarn={yarn}
+                                            onPress={() => router.push(`/yarn/${yarn.id}`)}
+                                            badgeIcon="trash.fill"
+                                            onBadgePress={() => confirmDelete({ yarn, onConfirm: deleteYarn })}
+                                        />
+                                    ))}
+                                </Grid>
+                            </Fragment>
+                        ))
                     )
                     )
-                )
-                }
-            </ScrollView>
-        </SafeAreaView>
+                )}
+            </Section>
+        </Screen>
     );
 }

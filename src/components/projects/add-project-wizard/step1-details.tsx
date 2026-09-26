@@ -1,9 +1,9 @@
 import { Button } from '@/components/general-styled-components/buttons/button';
-import { Tag } from '@/components/general-styled-components/buttons/tag';
+import { RequiredMark, TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/inputs/field';
+import { Tag } from '@/components/general-styled-components/inputs/tag';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { BackButton } from '@/components/general-styled-components/navigation/back-button';
 import { Label } from '@/components/general-styled-components/typography';
-import { RequiredMark, TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/wizard/field';
 import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
 import { useProjectDraftStore } from '@/hooks/use-project-draft-store';
 import type { Craft, Difficulty } from '@/types/project';

@@ -36,7 +36,9 @@ const MonthDividerContainer = styled.View`
 `;
 
 const Divider = styled.View`
+  flex-direction: row;
   height: 1px;
+  width: 100%;
   background-color: ${({ theme }) => theme.colors.border};
 `;
 

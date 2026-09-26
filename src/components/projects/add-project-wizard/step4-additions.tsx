@@ -1,14 +1,14 @@
 import { Button } from '@/components/general-styled-components/buttons/button';
+import { LinkButton } from '@/components/general-styled-components/buttons/grey-button';
+import { TextField } from '@/components/general-styled-components/inputs/field';
 import { Section } from '@/components/general-styled-components/layout/layout-block';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { BackButton } from '@/components/general-styled-components/navigation/back-button';
-import { LinkButton } from '@/components/general-styled-components/navigation/grey-button';
 import { Label } from '@/components/general-styled-components/typography';
-import { TextField } from '@/components/general-styled-components/wizard/field';
 import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
 import { useProjectDraftStore } from '@/hooks/use-project-draft-store';
 import { useProjectStore } from '@/hooks/use-project-store';
-import { pickPhotos } from '@/utils/images';
+import { pickPhotos, takePhoto } from '@/utils/images';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { styled } from 'styled-components/native';
@@ -16,13 +16,13 @@ import { styled } from 'styled-components/native';
 const Thumbs = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.sm}px;
+  gap: ${({ theme }) => theme.spacing.xs}px;
 `;
 
 const Thumb = styled(Image)`
   width: 70px;
   height: 70px;
-  border-radius: ${({ theme }) => theme.radius.sm}px;
+  border-radius: ${({ theme }) => theme.radius.md}px;
 `;
 
 export function AdditionsStep() {
@@ -31,7 +31,12 @@ export function AdditionsStep() {
     const goTo = useProjectDraftStore((state) => state.goTo);
     const addProject = useProjectStore((state) => state.addProject);
 
-    const addPhotos = async () => {
+    const takeReferencePhoto = async () => {
+        const uri = await takePhoto();
+        if (uri) setField('referencePhotos', [...draft.referencePhotos, uri]);
+    };
+
+    const addReferencePhoto = async () => {
         const uris = await pickPhotos();
         if (uris.length) setField('referencePhotos', [...draft.referencePhotos, ...uris]);
     };
@@ -41,11 +46,10 @@ export function AdditionsStep() {
             name: draft.name.trim(),
             craft: draft.craft,
             difficulty: draft.difficulty,
-            yarnNeeded: Number(draft.yarnNeeded),
-            hookNeedleSize: draft.hookNeedleSize || undefined,
+            hookNeedleSize: draft.hookNeedleSize.trim(),
             stitches: draft.stitches || undefined,
             tutorialUrl: draft.tutorialUrl || undefined,
-            yarnIds: draft.yarnIds,
+            yarn: draft.yarn,
             steps: draft.steps,
             notes: draft.notes.trim() || undefined,
             referencePhotos: draft.referencePhotos,
@@ -55,7 +59,7 @@ export function AdditionsStep() {
     };
 
     return (
-        <Screen footer={<Button label="Add project" onPress={save} />}>
+        <Screen footer={<Button label="Create project" onPress={save} />}>
             <BackButton onPress={() => goTo(3)} />
             <WizardHeader
                 step={4}
@@ -64,17 +68,10 @@ export function AdditionsStep() {
                 description="Add your pattern, tutorials, references, notes, list of extra materials etc."
             />
 
-            <TextField
-                label="Notes"
-                multiline
-                style={{ minHeight: 93 }}
-                value={draft.notes}
-                onChangeText={(value) => setField('notes', value)}
-            />
-
             <Section>
-                <Label>Photos (Optional)</Label>
-                <LinkButton variant="photo" icon="folder.fill" label="Attach photo from library" onPress={addPhotos} />
+                <Label>Photos(s)</Label>
+                <LinkButton variant="photo" icon="camera.fill" label="Take picture" onPress={takeReferencePhoto} />
+                <LinkButton variant="photo" icon="folder.fill" label="Attach photo from library" onPress={addReferencePhoto} />
             </Section>
 
             {draft.referencePhotos.length > 0 && (
@@ -84,6 +81,14 @@ export function AdditionsStep() {
                     ))}
                 </Thumbs>
             )}
+
+            <TextField
+                label="Notes"
+                multiline
+                style={{ minHeight: 93 }}
+                value={draft.notes}
+                onChangeText={(value) => setField('notes', value)}
+            />
         </Screen>
     );
 }

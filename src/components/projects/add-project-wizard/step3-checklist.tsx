@@ -1,21 +1,22 @@
-import { AddButton } from '@/components/general-styled-components/buttons/add-button';
+import { Badge } from '@/components/general-styled-components/badge';
 import { Button } from '@/components/general-styled-components/buttons/button';
+import { LinkButton } from '@/components/general-styled-components/buttons/grey-button';
+import { IconButton } from '@/components/general-styled-components/buttons/icon-button';
+import { TextField } from '@/components/general-styled-components/inputs/field';
 import { Screen } from '@/components/general-styled-components/layout/screen';
 import { BackButton } from '@/components/general-styled-components/navigation/back-button';
-import { TextField } from '@/components/general-styled-components/wizard/field';
 import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
 import { cardShadow } from '@/constants/shadow';
 import { useProjectDraftStore } from '@/hooks/use-project-draft-store';
-import { SymbolView } from 'expo-symbols';
+import { ProjectStep } from '@/types/project';
 import { useState } from 'react';
-import { Pressable } from 'react-native';
-import { styled, useTheme } from 'styled-components/native';
+import { styled } from 'styled-components/native';
 
 const StepCard = styled.View`
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   gap: ${({ theme }) => theme.spacing.md}px;
-  padding: ${({ theme }) => theme.spacing.md}px;
+  padding: ${({ theme }) => theme.spacing.lg}px ${({ theme }) => theme.spacing.md}px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.md}px;
@@ -23,9 +24,9 @@ const StepCard = styled.View`
   ${cardShadow}
 `;
 
-const StepBody = styled.View`
+const StepContent = styled.View`
   flex: 1;
-  gap: ${({ theme }) => theme.spacing.xs}px;
+  gap: ${({ theme }) => theme.spacing.sm}px;
 `;
 
 const StepTop = styled.View`
@@ -33,54 +34,74 @@ const StepTop = styled.View`
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: ${({ theme }) => theme.spacing.sm}px;
 `;
 
 const StepTitle = styled.Text`
+  flex-shrink: 1;
   font-family: ${({ theme }) => theme.fonts.bold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
   color: ${({ theme }) => theme.colors.black};
 `;
 
-const Badge = styled.Text`
-  padding: 4px 10px;
-  overflow: hidden;
-  border-radius: ${({ theme }) => theme.radius.md}px;
-  background-color: ${({ theme }) => theme.colors.lightGray};
-  font-family: ${({ theme }) => theme.fonts.regular};
-  font-size: ${({ theme }) => theme.fontSizes.xs}px;
-  color: ${({ theme }) => theme.colors.darkGrey};
-`;
-
 const StepText = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
   font-size: ${({ theme }) => theme.fontSizes.xs}px;
-  color: ${({ theme }) => theme.colors.darkGrey};
+  color: ${({ theme }) => theme.colors.grey};
+`;
+
+const FormCard = styled.View`
+  gap: ${({ theme }) => theme.spacing.md}px;
+  padding: ${({ theme }) => theme.spacing.md}px;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md}px;
+`;
+
+const FormActions = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: ${({ theme }) => theme.spacing.xs}px;
 `;
 
 const emptyForm = { title: '', target: '', description: '' };
 
 export function ChecklistStep() {
-    const theme = useTheme();
     const steps = useProjectDraftStore((state) => state.draft.steps);
-    const addStep = useProjectDraftStore((state) => state.addStep);
-    const removeStep = useProjectDraftStore((state) => state.removeStep);
-    const goTo = useProjectDraftStore((state) => state.goTo);
+    const { addStep, updateStep, removeStep, goTo } = useProjectDraftStore.getState();
+
     const [form, setForm] = useState(emptyForm);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [formOpen, setFormOpen] = useState(steps.length === 0);
+
     const [showError, setShowError] = useState(false);
 
-    const add = () => {
+    const openEdit = (step: ProjectStep) => {
+        setForm({ title: step.title, target: step.target ?? '', description: step.description ?? '' });
+        setEditingId(step.id);
+        setFormOpen(true);
+    };
+
+    const closeEdit = () => {
+        setForm(emptyForm);
+        setEditingId(null);
+        setFormOpen(false);
+        setShowError(false);
+    };
+
+    const save = () => {
         if (!form.title.trim()) {
             setShowError(true);
             return;
         }
-        addStep({
+        const values = {
             title: form.title.trim(),
             target: form.target.trim() || undefined,
             description: form.description.trim() || undefined,
-        });
-        setForm(emptyForm);
-        setShowError(false);
+        };
+        if (editingId) updateStep(editingId, values);
+        else addStep(values);
+        closeEdit();
     };
 
     return (
@@ -95,48 +116,60 @@ export function ChecklistStep() {
 
             {steps.map((step, index) => (
                 <StepCard key={step.id}>
-                    <StepBody>
+                    <IconButton icon="line.3.horizontal" label="Reorder (coming soon)" />
+                    <StepContent>
                         <StepTop>
-                            <StepTitle>
+                            <StepTitle numberOfLines={1}>
                                 {index + 1}. {step.title}
                             </StepTitle>
-                            {step.target && <Badge>Target: {step.target}</Badge>}
+                            {step.target &&
+                                <Badge label={`Target: ${step.target}`}></Badge>}
                         </StepTop>
                         {step.description && <StepText>{step.description}</StepText>}
-                    </StepBody>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={`Remove ${step.title}`}
-                        hitSlop={10}
-                        onPress={() => removeStep(step.id)}
-                    >
-                        <SymbolView name="trash" size={16} tintColor={theme.colors.darkGrey} />
-                    </Pressable>
+                    </StepContent>
+                    <IconButton icon="square.and.pencil" label={`Edit ${step.title}`} onPress={() => openEdit(step)} />
                 </StepCard>
             ))}
-
-            <TextField
-                label="Step name"
-                required
-                placeholder="Cast on"
-                value={form.title}
-                onChangeText={(title) => setForm({ ...form, title })}
-                error={showError && !form.title.trim() ? 'Name the step first' : undefined}
-            />
-            <TextField
-                label="Target"
-                placeholder="120 stitches"
-                value={form.target}
-                onChangeText={(target) => setForm({ ...form, target })}
-            />
-            <TextField
-                label="Description"
-                placeholder="Use long-tail cast on with your main yarn."
-                multiline
-                value={form.description}
-                onChangeText={(description) => setForm({ ...form, description })}
-            />
-            <AddButton label={steps.length ? 'Add another step' : 'Add step'} onPress={add} />
+            {formOpen ? (
+                <FormCard>
+                    <TextField
+                        label="Step name"
+                        required
+                        placeholder="Cast on"
+                        value={form.title}
+                        onChangeText={(title) => setForm({ ...form, title })}
+                        error={showError && !form.title.trim() ? 'Name the step first' : undefined}
+                    />
+                    <TextField
+                        label="Target"
+                        placeholder="120 stitches"
+                        value={form.target}
+                        onChangeText={(target) => setForm({ ...form, target })}
+                    />
+                    <TextField
+                        label="Description"
+                        multiline
+                        placeholder="Use long-tail cast on with your main yarn."
+                        value={form.description}
+                        onChangeText={(description) => setForm({ ...form, description })}
+                    />
+                    <FormActions>
+                        <Button label="Save" size="sm" onPress={save} />
+                        {editingId && (
+                            < IconButton
+                                icon="trash"
+                                label={`Delete`}
+                                onPress={() => {
+                                    removeStep(editingId);
+                                    closeEdit();
+                                }}
+                            />
+                        )}
+                    </FormActions>
+                </FormCard>
+            ) : (
+                <LinkButton variant='add-link' icon='plus' label="Add another step" onPress={() => setFormOpen(true)} />
+            )}
         </Screen>
     );
 }

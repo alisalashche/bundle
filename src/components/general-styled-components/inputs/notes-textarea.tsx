@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { styled } from 'styled-components/native';
-import { Button } from './button';
+import { Button } from '../buttons/button';
 
 const Container = styled.Pressable`
   min-height: 64px;

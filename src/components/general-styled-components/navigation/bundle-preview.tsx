@@ -1,7 +1,7 @@
+import { cardShadow } from '@/constants/shadow';
 import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
-import { useTheme, styled } from 'styled-components/native';
-import { cardShadow } from '@/constants/shadow';
+import { styled, useTheme } from 'styled-components/native';
 
 const Container = styled.Pressable`
   flex-direction: row;
@@ -50,9 +50,9 @@ const RowSubtitle = styled.Text`
   color: ${({ theme }) => theme.colors.black};
 `;
 
-type BundleRowProps = { title: string; subtitle: string; photos: (string | undefined)[]; onPress: () => void };
+type BundlePreviewProps = { title: string; subtitle: string; photos: (string | undefined)[]; onPress: () => void };
 
-export function BundleRow({ title, subtitle, photos, onPress }: BundleRowProps) {
+export function BundlePreview({ title, subtitle, photos, onPress }: BundlePreviewProps) {
   const theme = useTheme();
   const [first, second, third] = photos.filter(Boolean);
   const source = (uri?: string) => (uri ? { uri } : undefined);

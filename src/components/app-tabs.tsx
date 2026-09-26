@@ -1,9 +1,11 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { useTheme } from 'styled-components/native';
 
-// SF symbols, Apple's built-in icon set
 export default function AppTabs() {
+  const theme = useTheme();
+
   return (
-    <NativeTabs>
+    <NativeTabs tintColor={theme.colors.primary}>
       <NativeTabs.Trigger name="(index)">
         <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="house.fill" md="home" />

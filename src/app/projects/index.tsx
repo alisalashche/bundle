@@ -1,35 +1,13 @@
-import { Fragment } from 'react';
-import { Breadcrumbs } from '@/components/breadcrumbs';
-import { EmptyState } from '@/components/empty-state';
-import { CardGrid } from '@/components/layout';
-import { PageHeader } from '@/components/page-header';
-import { ProjectCard } from '@/components/project-card';
-import { Screen } from '@/components/screen';
-import { Heading, MonthLabel } from '@/components/typography';
+import { AddButton } from '@/components/general-styled-components/buttons/add-button';
+import { EmptyState } from '@/components/general-styled-components/layout/empty-state';
+import { PageHeader } from '@/components/general-styled-components/layout/layout-block';
+import { Screen } from '@/components/general-styled-components/layout/screen';
+import { Breadcrumbs } from '@/components/general-styled-components/navigation/breadcrumbs';
+import { ProjectSection } from '@/components/projects/project-section';
 import { openNewProject } from '@/hooks/use-project-draft-store';
 import { useProjectStore } from '@/hooks/use-project-store';
-import type { Project } from '@/types/project';
 import { groupByMonth } from '@/utils/dates';
-
-type ProjectSectionProps = { title: string; groups: { title: string; items: Project[] }[] };
-
-function ProjectSection({ title, groups }: ProjectSectionProps) {
-  return (
-    <>
-      <Heading>{title}</Heading>
-      {groups.map((group) => (
-        <Fragment key={group.title}>
-          <MonthLabel>{group.title}</MonthLabel>
-          <CardGrid>
-            {group.items.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </CardGrid>
-        </Fragment>
-      ))}
-    </>
-  );
-}
+import { router } from 'expo-router';
 
 export default function ProjectsScreen() {
   const projects = useProjectStore((state) => state.projects);
@@ -38,11 +16,13 @@ export default function ProjectsScreen() {
     .filter((project) => project.status === 'finished' && project.finishedAt)
     .sort((a, b) => b.finishedAt!.localeCompare(a.finishedAt!));
 
+  const addProject = () => router.push('/projects/new');
+
   return (
     <Screen>
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Projects' }]} />
       <PageHeader title="Projects" description="Keep track of all project’s materials and progress" />
-
+      <AddButton label="Start new project" onPress={addProject} />
       {projects.length === 0 ? (
         <EmptyState
           heading="No projects yet"

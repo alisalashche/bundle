@@ -1,28 +1,30 @@
 import { useState } from 'react';
-import styled from 'styled-components/native';
+import { styled } from 'styled-components/native';
 import { Button } from './button';
 
-const Card = styled.View`
-  padding: 10px 15px;
-  gap: 12px;
+const Container = styled.Pressable`
+  min-height: 64px;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: ${({ theme }) => theme.spacing.md}px;
+  padding: ${({ theme }) => theme.spacing.lg}px;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.colors.placeholder};
+  border-color: ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.md}px;
-  background-color: ${({ theme }) => theme.colors.surfaceAlt};
+  background-color: ${({ theme }) => theme.colors.lightGray};
 `;
-
 
 const NotesText = styled.Text`
   font-family: ${({ theme }) => theme.fonts.semiBold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
-  color: ${({ theme }) => theme.colors.dark};
+  color: ${({ theme }) => theme.colors.grey};
 `;
 
 const NotesInput = styled.TextInput`
   min-height: 60px;
   font-family: ${({ theme }) => theme.fonts.semiBold};
   font-size: ${({ theme }) => theme.fontSizes.sm}px;
-  color: ${({ theme }) => theme.colors.dark};
+  color: ${({ theme }) => theme.colors.darkGrey};
 `;
 
 const EditLink = styled.Text`
@@ -35,7 +37,7 @@ const EditLink = styled.Text`
 const Actions = styled.View`
   flex-direction: row;
   justify-content: flex-end;
-  gap: 5px;
+  gap: ${({ theme }) => theme.spacing.xs}px;
 `;
 
 type NotesBoxProps = { notes?: string; onSave: (notes: string) => void };
@@ -46,22 +48,22 @@ export function NotesBox({ notes, onSave }: NotesBoxProps) {
 
     if (editing) {
         return (
-            <Card>
+            <Container>
                 <NotesInput multiline autoFocus value={text} onChangeText={setText} accessibilityLabel="Notes" />
                 <Actions>
                     <Button label="Save" size="sm" onPress={() => { onSave(text.trim()); setEditing(false); }} />
-                    <Button label="Cancel" size="sm" variant="dark" onPress={() => { setText(notes ?? ''); setEditing(false); }} />
+                    <Button label="Cancel" size="sm" variant="secondary" onPress={() => { setText(notes ?? ''); setEditing(false); }} />
                 </Actions>
-            </Card>
+            </Container>
         );
     }
 
     return (
-        <Card>
+        <Container>
             <NotesText>{notes || 'No notes yet'}</NotesText>
             <EditLink accessibilityRole="button" onPress={() => setEditing(true)}>
                 Edit
             </EditLink>
-        </Card>
+        </Container>
     );
 }

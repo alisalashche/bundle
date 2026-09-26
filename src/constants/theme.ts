@@ -1,53 +1,47 @@
 export const theme = {
     colors: {
-        primary: '#B90C0C',     // red buttons, links, active step
-        black: '#000000',       // big titles
-        text: '#111827',        // labels, body text
-        textMuted: '#6B7280',   // descriptions, input text
-        textSubtle: '#9CA3AF',  // placeholders, inactive step numbers
-        border: '#E5E7EB',      // input and card borders
-        surface: '#F3F4F6',     // inactive step circle
-        placeholder: '#D9D9D9', // empty photo boxes, logo box
-        secondary: '#8C8C8C',   
-        white: '#FFFFFF',
-
-
-        surfaceAlt: '#F5F5F5',  // "See yarn archive" row
-        photoBg: '#F9FAFB',     // empty photo preview
-        tint: '#FFF5F5',        // light red circle behind + icons
-        dark: '#454545',        // small Cancel button, archive link text
+        primary: '#B90C0C',   // buttons, breadcrumbs, links, active chip/step, required *, errors, FAB
+        lightRed: '#FFF1F2',  // circle behind + in "Add new …" cards, empty-state icon circle
+        black: '#000000',     // H1/H2 titles, labels, card names, body text
+        white: '#FFFFFF',     // screen & card backgrounds, text on red
+        grey: '#6F6F6F',      // photo placeholders, input placeholders, inactive chip/step text, link rows
+        darkGrey: '#454545',  // page descriptions, card subtitles, corner badges, photo-option icons
+        lightGray: '#F5F5F5', // inactive chips & steps, target badges, link rows, icon buttons
+        border: '#D9D9D9',    // card & input borders, logo placeholder, breadcrumb arrows
     },
     fonts: {
-        regular: 'Inter_400Regular',
-        semiBold: 'Inter_600SemiBold',
-        bold: 'Inter_700Bold',
-        extraBold: 'Inter_800ExtraBold',
+        regular: 'Inter_400Regular',     // body text, inputs, descriptions
+        semiBold: 'Inter_600SemiBold',   // link rows, photo options, small card subtitles
+        bold: 'Inter_700Bold',           // titles, labels, buttons, card names
+        extraBold: 'Inter_800ExtraBold', // tab labels
+        black: 'Inter_900Black',         // breadcrumbs, Back / Cancel
     },
     fontSizes: {
-        caption: 12,
-        xs: 13,
-        sm: 14,
-        button: 15,
-        md: 16,
-        lg: 20,
-        xl: 24,
-        xxl: 32,
-    },
-    radius: {
-        xs: 3,   
-        sm: 8,
-        md: 12, 
-        lg: 16,  
-        xl: 18,  
-        full: 999,
+        xs: 13,      // input text, small card names, step descriptions
+        sm: 14,      // labels, page descriptions, logo, info rows, step titles
+        md: 16,      // breadcrumbs, big card names, bundle-row subtitles
+        lg: 20,      // buttons, "Add new …" cards, month labels, FAB menu, "See more"
+        xl: 24,      // section headings, bundle-row titles, empty-state heading
+        xxl: 32,     // page and wizard titles
     },
     spacing: {
-        xs: 4,
-        sm: 8,
-        md: 16,
-        lg: 18,
-        xl: 24,
+        none: 0,
+        xs: 4,     // label - *, title - subtitle inside cards, month label - divider
+        sm: 8,     // label - input, chips, breadcrumbs, step dots, card grids, hero blocks
+        md: 12,    // padding & gaps inside cards, section heading - content, FAB menu
+        lg: 16,    // screen side padding, header - content, input padding, link rows
+        xl: 20,    // screen top/bottom padding, gap between blocks on a screen
+        jumbo: 80, // empty state vertical padding
     },
-} as const; //for autocomplete
+    radius: {
+        sm: 4,     // collage tiles in "My bundle" rows
+        md: 12,    // cards, inputs, buttons, chips, badges, link rows, logo
+        full: 999, // step dots, icon circles, FAB
+    },
+    shadows: {
+        card: { offsetY: 6, radius: 9, opacity: 0.06 },   // add-cards, bundle rows, step cards
+        raised: { offsetY: 0, radius: 5, opacity: 0.25 }, // buttons, FAB, FAB menu
+    },
+} as const;
 
 export type Theme = typeof theme;

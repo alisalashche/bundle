@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { NotesBox } from '@/components/notes-box';
+import { NotesBox } from '@/components/general-styled-components/buttons/notes-textarea';
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
 

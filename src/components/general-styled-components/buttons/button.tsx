@@ -1,39 +1,39 @@
-import styled from 'styled-components/native';
+import { raisedShadow } from '@/constants/shadow';
+import { styled } from 'styled-components/native';
 
-type Variant = 'primary' | 'secondary' | 'dark';
+type Variant = 'primary' | 'secondary' ;
 type Size = 'sm' | 'md' | 'lg';
 type Align = 'stretch' | 'flex-start' | 'center' | 'flex-end';
 
-// One lookup table per size, taken from Figma
-const sizes = {
-    sm: { height: 28, paddingX: 14, fontSize: 12 },
-    md: { height: 48, paddingX: 22, fontSize: 15 },
-    lg: { height: 44, paddingX: 28, fontSize: 20 },
+const variantColors = {
+    primary: 'primary',
+    secondary: 'grey',
 } as const;
+const sizeFonts = { sm: 'sm', md: 'md', lg: 'lg' } as const;
 
-type ContainerProps = {
-    $variant: Variant;
-    $size: Size;
-    $align: Align;
-    $grow: boolean;
-    $disabled: boolean;
-};
+type ContainerProps = { $variant: Variant; $size: Size; $align: Align; $grow: boolean; $disabled: boolean };
 
 const Container = styled.Pressable<ContainerProps>`
   align-self: ${({ $align }) => $align};
   flex-grow: ${({ $grow }) => ($grow ? 1 : 0)};
-  height: ${({ $size }) => sizes[$size].height}px;
-  padding: 0 ${({ $size }) => sizes[$size].paddingX}px;
+  min-width: ${({ $size }) => ($size === 'lg' ? 113 : 0)}px;
+  padding: ${({ theme, $size }) =>
+        $size === 'sm'
+            ? `${theme.spacing.xs}px ${theme.spacing.md}px`
+            : $size === 'md'
+                ? `${theme.spacing.md}px ${theme.spacing.xl}px`
+                : `${theme.spacing.sm}px ${theme.spacing.md}px`};
   align-items: center;
   justify-content: center;
   border-radius: ${({ theme, $size }) => ($size === 'sm' ? theme.radius.full : theme.radius.md)}px;
-  background-color: ${({ theme, $variant }) => theme.colors[$variant]};
+  background-color: ${({ theme, $variant }) => theme.colors[variantColors[$variant]]};
   opacity: ${({ $disabled }) => ($disabled ? 0.4 : 1)};
+  ${raisedShadow}
 `;
 
 const ButtonText = styled.Text<{ $size: Size }>`
   font-family: ${({ theme }) => theme.fonts.bold};
-  font-size: ${({ $size }) => sizes[$size].fontSize}px;
+  font-size: ${({ theme, $size }) => theme.fontSizes[sizeFonts[$size]]}px;
   color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -61,7 +61,7 @@ export function Button({
             accessibilityRole="button"
             onPress={onPress}
             disabled={disabled}
-            hitSlop={size === 'sm' ? 8 : 0} //invisible area to touch easier
+            hitSlop={size === 'sm' ? 8 : 0}
             $variant={variant}
             $size={size}
             $align={align}

@@ -1,12 +1,12 @@
-import { BackLink } from '@/components/back-link';
-import { Button } from '@/components/button';
-import { Chip } from '@/components/chip';
-import { ChipRow, Half, Row } from '@/components/layout';
-import { PhotoOption } from '@/components/photo-option';
-import { Screen } from '@/components/screen';
-import { StepIndicator } from '@/components/step-indicator';
-import { TextField } from '@/components/text-field';
-import { Label, CenteredTitle } from '@/components/typography';
+import { Button } from '@/components/general-styled-components/buttons/button';
+import { Tag } from '@/components/general-styled-components/buttons/tag';
+import { Half, Row } from '@/components/general-styled-components/layout/layout-block';
+import { Screen } from '@/components/general-styled-components/layout/screen';
+import { BackButton } from '@/components/general-styled-components/navigation/back-button';
+import { LinkButton } from '@/components/general-styled-components/navigation/grey-button';
+import { Label } from '@/components/general-styled-components/typography';
+import { TagsGroup, TagsRow, TextField } from '@/components/general-styled-components/wizard/field';
+import { WizardHeader } from '@/components/general-styled-components/wizard/wizard-header';
 import styled from 'styled-components/native';
 
 import { useYarnStore } from '@/hooks/use-yarn-store';
@@ -20,7 +20,7 @@ import { useState } from 'react';
 const Preview = styled(Image)`
   width: 100%;
   height: 260px;
-  border-radius: ${({ theme }) => theme.radius.lg}px;
+  border-radius: ${({ theme }) => theme.radius.md}px;
 `;
 
 type Form = {
@@ -110,18 +110,19 @@ export default function NewYarnScreen() {
                         }} />
                 }
             >
-                <BackLink label="Cancel" />
-                <StepIndicator current={1} total={2} />
-                <CenteredTitle>Label information</CenteredTitle>
+                <BackButton label="Cancel" />
+                <WizardHeader step={1} total={2} title="Label information" />
 
                 <TextField label="Brand/Name" required placeholder="Cozy 100% wool" {...bind('name')} />
 
-                <Label>Type</Label>
-                <ChipRow>
-                    {yarnTypes.map((option) => (
-                        <Chip key={option} label={option} selected={type === option} onPress={() => setType(option)} />
-                    ))}
-                </ChipRow>
+                <TagsGroup>
+                    <Label>Type</Label>
+                    <TagsRow>
+                        {yarnTypes.map((option) => (
+                            <Tag key={option} label={option} selected={type === option} onPress={() => setType(option)} />
+                        ))}
+                    </TagsRow>
+                </TagsGroup>
 
                 <Row>
                     <Half>
@@ -165,19 +166,18 @@ export default function NewYarnScreen() {
     // Step 2
     return (
         <Screen footer={<Button label="Add yarn" onPress={save} />}>
-            <BackLink onPress={() => setStep(1)} />
-            <StepIndicator current={2} total={2} />
-            <CenteredTitle>Add picture</CenteredTitle>
+            <BackButton onPress={() => setStep(1)} />
+            <WizardHeader step={2} total={2} title="Add picture" />
 
             {photoUri && <Preview source={{ uri: photoUri }} contentFit="cover" />}
 
-            <PhotoOption
+            <LinkButton
+                variant="photo"
                 icon="folder.fill"
                 label={photoUri ? 'Choose another photo' : 'Attach photo from library'}
-                height={60}
                 onPress={() => choosePhoto(pickPhoto)}
             />
-            <PhotoOption icon="camera.fill" label="Take picture" height={60} onPress={() => choosePhoto(takePhoto)} />
+            <LinkButton variant="photo" icon="camera.fill" label="Take picture" onPress={() => choosePhoto(takePhoto)} />
         </Screen>
     );
 }
